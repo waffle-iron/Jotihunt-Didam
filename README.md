@@ -47,7 +47,7 @@ Op het moment dat er op een vos wordt gedrukt, moet er de status in komen te sta
 Ook moet er een mogelijkheid komen om makkelijk een navigatie route in te stellen.
 
 Op het moment dat er op een jager wordt gedrukt, moet er een gebruikersnaam van deze jager komen te staan.
-## Vossen ##
+### Vossen ###
 Met een ```API Call``` naar de ```Jotihunt API``` is het mogelijk om de status van de vossen op te halen.
 Al deze vossenteam zouden vervolgens in een tabel moeten komen staan, met de status er bij.
 ### Instellingen ###
