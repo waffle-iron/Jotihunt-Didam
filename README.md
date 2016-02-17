@@ -44,6 +44,7 @@ Vervolgens moet hij een lijst met Vossen en Jagers ophalen van de API Server, me
 
 Vossen moeten worden weergegeven met een vos icoontje, en jagers met een ander icoontje.
 Op het moment dat er op een vos wordt gedrukt, moet er de status in komen te staan en het tijdstip van deze locatie.
+Ook moet er een mogelijkheid komen om makkelijk een navigatie route in te stellen.
 
 Op het moment dat er op een jager wordt gedrukt, moet er een gebruikersnaam van deze jager komen te staan.
 ### Instellingen ###
