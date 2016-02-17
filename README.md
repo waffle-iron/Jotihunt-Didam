@@ -40,7 +40,7 @@ In het begin van de app moet het mogelijk te zijn om in te loggen. Dit wordt ook
 Op het moment dat er ingelogd is, moet er een activity komen te staan met Google Maps. 
 Deze moet gecentreerd zijn op Gelderland, met alle deelgebieden ingeladen.
 
-Vervolgens moet hij een lijst met Vossen en Jagers ophalen van de API Server, met een standaard intervaltijd van 30 seconden. Deze intervaltijd valt later aan te passen in instellingen.
+Vervolgens moet hij een lijst met Vossen en Jagers ophalen van de API Server, met een standaard intervaltijd van 30 seconden. Tijdens deze update wordt niet alleen de data van andere jagers van de ```API Server``` opgehaald, maar ook de huidige locatie van de jager verstuurd. Dit moet echter aan of uit te zetten zijn bij de **instellingen**. De intervaltijd moet ook aan te passen zijn in **instellingen**.
 
 Vossen moeten worden weergegeven met een vos icoontje, en jagers met een ander icoontje.
 Op het moment dat er op een vos wordt gedrukt, moet er de status in komen te staan en het tijdstip van deze locatie.
