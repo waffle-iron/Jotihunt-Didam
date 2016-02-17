@@ -48,8 +48,10 @@ Op het moment dat er op een vos wordt gedrukt, moet er de status in komen te sta
 Op het moment dat er op een jager wordt gedrukt, moet er een gebruikersnaam van deze jager komen te staan.
 ### Instellingen ###
 In de instellingen moet er een optie komen te staan die de update tijd van de coördinaten ophalen bepaald.
+Ook moet het mogelijk zijn om het versturen van de locatie als jager aan of uit te zetten.
 
 ## Extra's ##
 Een implementatie voor score zou leuk zijn. Deze kan worden opgehaald door middel van de ```Jotihunt API```.
+
 
 Ook zou het handig zijn om een tablad voor aantekeningen te maken. Deze moeten uiteraard ook gesynchroniseerd zijn met de andere gebruikers van de app.
