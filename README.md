@@ -35,3 +35,12 @@ Staat de status van de vos echter op oranje, dan betekend het dat de vos wel geh
 Je kan punten verdienen door vossen te jagen, en opdrachten op te lossen.
 **Een hunt levert 2 punten op.**
 Het kan echter ook zo zijn dat het *happy hour* is, als dit het geval is levert het 3 punten op.
+
+## Wat moet er mogelijk zijn in de app? ##
+
+In het begin van de app moet het mogelijk te zijn om in te loggen. Dit wordt ook gebruikt voor de verificatie van de ```API``` calls.
+
+Op het moment dat er ingelogd is, moet er een activity komen te staan met Google Maps. Deze moet gecentreerd zijn op Gelderland, met alle deelgebieden ingeladen.
+
+### Instellingen ###
+In de instellingen moet er een optie komen te staan die de update tijd van de coördinaten ophalen bepaald.
