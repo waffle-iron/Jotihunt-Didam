@@ -35,8 +35,3 @@ Staat de status van de vos echter op oranje, dan betekend het dat de vos wel geh
 Je kan punten verdienen door vossen te jagen, en opdrachten op te lossen.
 **Een hunt levert 2 punten op.**
 Het kan echter ook zo zijn dat het *happy hour* is, als dit het geval is levert het 3 punten op.
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
