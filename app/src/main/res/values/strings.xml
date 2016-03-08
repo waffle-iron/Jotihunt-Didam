@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">Jotihunt</string>
+    <string name="app_name">Jotihunt Didam</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="GET">GET</string>
+    <string name="POST">POST</string>
+    <string name="STATE_ENDED">ended</string>
+
 </resources>
