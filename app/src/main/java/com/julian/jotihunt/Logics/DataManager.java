@@ -4,6 +4,22 @@ package com.julian.jotihunt.Logics;
  * Created by Julian on 9-3-2016.
  */
 public class DataManager {
+
+    private static String name;
+    private static String mail;
+    private static String password;
+    private static String api_url;
+    private static Boolean error = false;
+    private static String invitecode;
+
+    public static String getName() {
+        return name;
+    }
+
+    public static void setName(String name) {
+        DataManager.name = name;
+    }
+
     public static String getMail() {
         return mail;
     }
@@ -28,16 +44,14 @@ public class DataManager {
         DataManager.api_url = api_url;
     }
 
-    private static String mail;
-    private static String password;
-    private static String api_url;
 
-    public static String getMessage() {
-        return message;
+
+    public static String getInvitecode() {
+        return invitecode;
     }
 
-    public static void setMessage(String message) {
-        DataManager.message = message;
+    public static void setInvitecode(String invitecode) {
+        DataManager.invitecode = invitecode;
     }
 
     public static Boolean getError() {
@@ -48,6 +62,5 @@ public class DataManager {
         DataManager.error = error;
     }
 
-    private static Boolean error = false;
-    private static String message;
+
 }

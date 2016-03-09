@@ -7,4 +7,6 @@
     <color name="colorSecondaryDark">#558b2f</color>
     <color name="colorAccent2">#aeea00</color>
     <color name="white_opaque">#f0f4c3</color>
+    <color name="iron">#EEEEEE</color>
+    <color name="white">#FFFFFF</color>
 </resources>

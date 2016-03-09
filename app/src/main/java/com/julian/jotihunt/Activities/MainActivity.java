@@ -19,7 +19,6 @@ import android.view.View;
 import com.julian.jotihunt.Fragments.AboutFragment;
 import com.julian.jotihunt.Fragments.CurrentLocationFragment;
 import com.julian.jotihunt.Fragments.GPSFragment;
-import com.julian.jotihunt.Fragments.HistoryLocationFragment;
 import com.julian.jotihunt.Fragments.HomeFragment;
 import com.julian.jotihunt.Fragments.TrackerInfoFragment;
 import com.julian.jotihunt.R;
@@ -162,9 +161,6 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 case R.id.nav_second_fragment:
                     fragmentClass = CurrentLocationFragment.class;
-                    break;
-                case R.id.nav_third_fragment:
-                    fragmentClass = HistoryLocationFragment.class;
                     break;
                 case R.id.nav_fourth_fragment:
                     fragmentClass = TrackerInfoFragment.class;
