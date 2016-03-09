@@ -42,9 +42,9 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         fragmentManager = getSupportFragmentManager();
         initViews();
-            FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-            tx.replace(R.id.flContent, new HomeFragment());
-            tx.commit();
+        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+        tx.replace(R.id.flContent, new HomeFragment());
+        tx.commit();
     }
 
 

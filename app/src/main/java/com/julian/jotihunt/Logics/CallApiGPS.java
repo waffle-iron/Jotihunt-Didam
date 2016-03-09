@@ -1,4 +1,5 @@
 package com.julian.jotihunt.Logics;
+
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -52,7 +53,7 @@ public class CallApiGPS extends AsyncTask<String, String, String> {
                     parametersAsQueryString.append(parameterName)
                             .append(PARAMETER_EQUALS_CHAR)
                             .append(URLEncoder.encode(
-                                    parameters.get(parameterName),"UTF-8"));
+                                    parameters.get(parameterName), "UTF-8"));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -130,15 +131,14 @@ public class CallApiGPS extends AsyncTask<String, String, String> {
             if (request.equals(ctx.getString(R.string.POST))){
                 String postParameters=params[2];
                 urlConnection.setDoInput (true);
-                urlConnection.setDoOutput (true);
-                urlConnection.setUseCaches (false);
-                urlConnection.setRequestProperty("Host", "hz.nl");
+                urlConnection.setDoOutput(true);
+                urlConnection.setUseCaches(false);
                 urlConnection.setRequestMethod(ctx.getString(R.string.POST));
                 urlConnection.setFixedLengthStreamingMode(
                         postParameters.getBytes().length);
                 try (PrintWriter out = new PrintWriter(urlConnection.getOutputStream())) {
                     out.print(postParameters);
-                    Log.v("Post-parameters:",postParameters);
+                    Log.v("Post-parameters:", postParameters);
                     out.close();
                 }
             }//http POST
