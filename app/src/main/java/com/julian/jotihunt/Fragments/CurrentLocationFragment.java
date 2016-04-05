@@ -1,10 +1,16 @@
 package com.julian.jotihunt.Fragments;
 
+import android.app.Service;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +19,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
@@ -21,6 +28,7 @@ import com.google.maps.android.kml.KmlContainer;
 import com.google.maps.android.kml.KmlLayer;
 import com.google.maps.android.kml.KmlPlacemark;
 import com.google.maps.android.kml.KmlPolygon;
+import com.julian.jotihunt.Logics.LocationService;
 import com.julian.jotihunt.R;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -38,6 +46,16 @@ public class CurrentLocationFragment extends Fragment {
                 container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("Huidige Locatie");
 
+        if ( ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+
+            requestPermissions( new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                    1);
+            requestPermissions( new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    2);
+
+        }
+        getActivity().startService(new Intent(getContext(), LocationService.class));
+
 
         mSupportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapwhere);
         if (mSupportMapFragment == null) {
@@ -47,6 +65,7 @@ public class CurrentLocationFragment extends Fragment {
             fragmentTransaction.replace(R.id.mapwhere, mSupportMapFragment).commit();
         }
         startMap();
+
         return view;
     }
 
@@ -61,7 +80,7 @@ public class CurrentLocationFragment extends Fragment {
                         KmlLayer kmlLayerpoint = new KmlLayer(googleMap, R.raw.jotihunt2015_edit, getContext());
                         kmlLayerarea.addLayerToMap();
                         kmlLayerpoint.addLayerToMap();
-                        moveCameraToKml(kmlLayerarea);
+                        moveCamera(googleMap);
                     } catch (IOException e) {
                         e.printStackTrace();
                     } catch (XmlPullParserException e) {
@@ -72,7 +91,13 @@ public class CurrentLocationFragment extends Fragment {
         });
     }
 
-
+    private void moveCamera(GoogleMap googleMap) {
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(52.062504, 5.921974))      // Sets the center of the map to Mountain View
+                .zoom(9)                   // Sets the zoom
+                .build();                   // Creates a CameraPosition from the builder
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
     private void moveCameraToKml(KmlLayer kmlLayer) {
         KmlContainer document = kmlLayer.getContainers().iterator().next();
         //Retrieve a nested container within the first container

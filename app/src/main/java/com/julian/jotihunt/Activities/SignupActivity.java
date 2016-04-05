@@ -78,7 +78,7 @@ public class SignupActivity extends AppCompatActivity {
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
-
+        final String server_ip = this.getString(R.string.server_ip);
         DataManager.setName(_nameText.getText().toString());
         DataManager.setMail(_emailText.getText().toString());
         DataManager.setPassword(_passwordText.getText().toString());
@@ -92,7 +92,7 @@ public class SignupActivity extends AppCompatActivity {
 
 
                         String tag_json_obj = "json_obj_req";
-                        String url = "http://192.168.1.7/api/v1/register";
+                        String url = server_ip + "register";
 
 
                         StringRequest sr = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {

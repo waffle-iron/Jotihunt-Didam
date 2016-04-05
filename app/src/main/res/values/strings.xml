@@ -16,4 +16,6 @@
     <string name="pref_password">password</string>
     <string name="pref_remember">remember</string>
 
+    <string name="server_ip">http://192.168.0.15/api/v1/</string>
+
 </resources>

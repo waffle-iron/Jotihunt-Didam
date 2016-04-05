@@ -3,7 +3,6 @@ package com.julian.jotihunt.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -41,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
 
-
     Context context = this;
 
     @InjectView(R.id.input_email)
@@ -60,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
+
 
         // Insert default mail and password
         if (Credentials.loadRememberPreference(context)) {
@@ -91,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         Credentials.saveRememberPreference(context, _savelogin.isChecked());
             Credentials.saveUsername(context, _emailText.getText().toString());
             Credentials.savePassword(context, _passwordText.getText().toString());
-
+        final String server_ip = this.getString(R.string.server_ip);
         _loginButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
@@ -105,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
                         String tag_json_obj = "json_obj_req";
-                        String url = "http://192.168.1.7/api/v1/login";
+                        String url = server_ip + "login";
 
 
                         StringRequest sr = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -166,20 +165,10 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                 }, 3000);
-
-
-
-
-
-
-
-
-
     }
 
     public void login() {
         Log.d(TAG, "Login");
-        SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
         if (!validate()) {
             onLoginFailed();
             return;
@@ -203,13 +192,7 @@ public class LoginActivity extends AppCompatActivity {
 
         DataManager.setMail(_emailText.getText().toString());
         DataManager.setPassword(_passwordText.getText().toString());
-
-
-        if (_savelogin.isChecked()) {
-            editor.putString("email", DataManager.getMail());
-            editor.putString("password", DataManager.getPassword());
-            editor.apply();
-        }
+        final String server_ip = this.getString(R.string.server_ip);
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
@@ -217,7 +200,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
                         String tag_json_obj = "json_obj_req";
-                        String url = "http://192.168.1.7/api/v1/login";
+                        String url = server_ip + "login";
 
 
                         StringRequest sr = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -228,6 +211,9 @@ public class LoginActivity extends AppCompatActivity {
                                     //Do it with this it will work
                                     JSONObject login = new JSONObject(response);
                                     DataManager.setError(login.getBoolean("error"));
+                                    DataManager.setName(login.getString("name"));
+                                    DataManager.setMail(login.getString("email"));
+                                    DataManager.setApi_key(login.getString("apiKey"));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

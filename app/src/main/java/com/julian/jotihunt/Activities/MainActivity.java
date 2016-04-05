@@ -1,8 +1,12 @@
 package com.julian.jotihunt.Activities;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +17,7 @@ import android.os.Bundle;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -20,8 +25,9 @@ import com.julian.jotihunt.Fragments.AboutFragment;
 import com.julian.jotihunt.Fragments.CurrentLocationFragment;
 import com.julian.jotihunt.Fragments.GPSFragment;
 import com.julian.jotihunt.Fragments.HomeFragment;
-import com.julian.jotihunt.Fragments.TrackerInfoFragment;
+import com.julian.jotihunt.Logics.LocationService;
 import com.julian.jotihunt.R;
+
 
 public class MainActivity extends AppCompatActivity implements
         PreferenceFragmentCompat.OnPreferenceStartScreenCallback{
@@ -39,8 +45,9 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         fragmentManager = getSupportFragmentManager();
         initViews();
+        Log.d("Intent", "Start nieuwe service");
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.flContent, new HomeFragment());
+        tx.replace(R.id.flContent, new CurrentLocationFragment());
         tx.commit();
     }
 
@@ -157,22 +164,19 @@ public class MainActivity extends AppCompatActivity implements
             menuItem.setChecked(true);
             switch (menuItem.getItemId()) {
                 case R.id.nav_first_fragment:
-                    fragmentClass = HomeFragment.class;
-                    break;
-                case R.id.nav_second_fragment:
                     fragmentClass = CurrentLocationFragment.class;
                     break;
-                case R.id.nav_fourth_fragment:
-                    fragmentClass = TrackerInfoFragment.class;
+                case R.id.nav_second_fragment:
+                    fragmentClass = HomeFragment.class;
                     break;
-                case R.id.nav_fifth_fragment:
+                case R.id.nav_third_fragment:
                     fragmentClass = GPSFragment.class;
                     break;
-                case R.id.nav_sixt_fragment:
+                case R.id.nav_fourth_fragment:
                     fragmentClass = AboutFragment.class;
                     break;
                 default:
-                    fragmentClass = HomeFragment.class;
+                    fragmentClass = CurrentLocationFragment.class;
             }
 
             try {
