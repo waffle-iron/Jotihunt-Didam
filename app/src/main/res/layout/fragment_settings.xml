@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true">
+    <PreferenceCategory
+        android:title="GPS Instellingen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <EditTextPreference
+            android:key="gps_number"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:inputType="phone"
+            android:digits="1234567890"
+            android:title="GPS Telefoon Nummer"
+            android:summary="Vul hier het nummer in"
+            android:id="@+id/gps_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <CheckBoxPreference
+            android:key="save_history"
+            android:summary="Sla geschiedenis op"
+            android:title="Geschiedenis Opslaan"
+            android:defaultValue="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </PreferenceCategory>
+</PreferenceScreen>

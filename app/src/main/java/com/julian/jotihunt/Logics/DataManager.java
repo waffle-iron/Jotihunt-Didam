@@ -1,13 +1,8 @@
 package com.julian.jotihunt.Logics;
 
-/**
- * Created by Julian on 9-3-2016.
- */
 public class DataManager {
 
     private static String name;
-    private static String mail;
-    private static String password;
     private static String api_url;
     private static String api_key;
     private static Boolean error = false;
@@ -65,21 +60,6 @@ public class DataManager {
         DataManager.name = name;
     }
 
-    public static String getMail() {
-        return mail;
-    }
-
-    public static void setMail(String mail) {
-        DataManager.mail = mail;
-    }
-
-    public static String getPassword() {
-        return password;
-    }
-
-    public static void setPassword(String password) {
-        DataManager.password = password;
-    }
 
     public static String getApi_url() {
         return api_url;

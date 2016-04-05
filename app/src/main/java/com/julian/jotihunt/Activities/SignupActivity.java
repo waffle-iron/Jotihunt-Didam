@@ -18,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.julian.jotihunt.Logics.AppController;
+import com.julian.jotihunt.Logics.Credentials;
 import com.julian.jotihunt.Logics.DataManager;
 import com.julian.jotihunt.R;
 
@@ -65,35 +66,28 @@ public class SignupActivity extends AppCompatActivity {
 
     public void signup() {
         Log.d(TAG, "Signup");
-
         if (!validate()) {
             onSignupFailed();
             return;
         }
 
         _signupButton.setEnabled(false);
-
+        final String server_ip = this.getString(R.string.server_ip);
         final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
                 R.style.AppTheme_Dark_Dialog);
+
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Creating Account...");
+        progressDialog.setMessage(this.getString(R.string.creating_account));
         progressDialog.show();
-        final String server_ip = this.getString(R.string.server_ip);
+
         DataManager.setName(_nameText.getText().toString());
-        DataManager.setMail(_emailText.getText().toString());
-        DataManager.setPassword(_passwordText.getText().toString());
         DataManager.setInvitecode(_inviteText.getText().toString());
 
         new android.os.Handler().postDelayed(
-
-
                 new Runnable() {
                     public void run() {
-
-
                         String tag_json_obj = "json_obj_req";
                         String url = server_ip + "register";
-
 
                         StringRequest sr = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                             @Override
@@ -106,10 +100,9 @@ public class SignupActivity extends AppCompatActivity {
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                Log.d("Error bolean", DataManager.getError().toString());
+                                Log.d("Error boolean", DataManager.getError().toString());
 
                                 if (!DataManager.getError()) {
-
                                     //Starting profile activity
                                     // Start the Signup activity
                                     onSignupSuccess();
@@ -128,15 +121,15 @@ public class SignupActivity extends AppCompatActivity {
                                 VolleyLog.d(TAG + "error 1", "Error: " + error.getMessage());
                                 Log.d(TAG + "error 2", "" + error.getMessage() + "," + error.toString());
                                 progressDialog.hide();
-                                Toast.makeText(context, "Server connection failed", Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, context.getString(R.string.server_connection_failed), Toast.LENGTH_LONG).show();
                             }
                         }) {
                             @Override
                             protected Map<String, String> getParams() {
                                 Map<String, String> params = new HashMap<>();
                                 params.put("name", DataManager.getName());
-                                params.put("email", DataManager.getMail());
-                                params.put("password", DataManager.getPassword());
+                                params.put("email", Credentials.loadUsername(context));
+                                params.put("password", Credentials.loadPassword(context));
                                 params.put("invitecode", DataManager.getInvitecode());
                                 Log.d("Input ", params.toString());
                                 return params;
@@ -165,7 +158,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), this.getString(R.string.login_failed), Toast.LENGTH_LONG).show();
 
         _signupButton.setEnabled(true);
     }
@@ -178,21 +171,21 @@ public class SignupActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
 
         if (name.isEmpty() || name.length() < 3) {
-            _nameText.setError("at least 3 characters");
+            _nameText.setError(this.getString(R.string.validate_name));
             valid = false;
         } else {
             _nameText.setError(null);
         }
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a valid email address");
+            _emailText.setError(this.getString(R.string.validate_mail));
             valid = false;
         } else {
             _emailText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() || password.length() < 4 || password.length() > 40) {
+            _passwordText.setError(this.getString(R.string.validate_password));
             valid = false;
         } else {
             _passwordText.setError(null);

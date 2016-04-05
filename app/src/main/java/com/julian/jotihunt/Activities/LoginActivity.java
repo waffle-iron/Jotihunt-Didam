@@ -74,7 +74,6 @@ public class LoginActivity extends AppCompatActivity {
                 login();
             }
         });
-
         _signupLink.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -86,26 +85,25 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void loginAfterRegister(){
+    public void loginAfterRegister() {
         Credentials.saveRememberPreference(context, _savelogin.isChecked());
-            Credentials.saveUsername(context, _emailText.getText().toString());
-            Credentials.savePassword(context, _passwordText.getText().toString());
-        final String server_ip = this.getString(R.string.server_ip);
+        Credentials.saveUsername(context, _emailText.getText().toString());
+        Credentials.savePassword(context, _passwordText.getText().toString());
         _loginButton.setEnabled(false);
 
+        final String server_ip = this.getString(R.string.server_ip);
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme_Dark_Dialog);
+
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
+        progressDialog.setMessage(this.getString(R.string.authenticating));
         progressDialog.show();
+
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-
-
                         String tag_json_obj = "json_obj_req";
                         String url = server_ip + "login";
-
 
                         StringRequest sr = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                             @Override
@@ -121,18 +119,14 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.d("Error bolean", DataManager.getError().toString());
 
                                 if (!DataManager.getError()) {
-
-                                    //Starting profile activity
-                                    // Start the Signup activity
+                                    //Login succesfull without error in mail or pw
                                     onLoginSuccess();
                                     progressDialog.hide();
                                 } else {
-                                    //If the server response is not success
-                                    //Displaying an error message on toast
+                                    //Login failed with error in mail or pw
                                     onLoginFailed();
                                     progressDialog.hide();
                                 }
-
                             }
                         }, new Response.ErrorListener() {
                             @Override
@@ -140,14 +134,15 @@ public class LoginActivity extends AppCompatActivity {
                                 VolleyLog.d(TAG + "error 1", "Error: " + error.getMessage());
                                 Log.d(TAG + "error 2", "" + error.getMessage() + "," + error.toString());
                                 progressDialog.hide();
-                                Toast.makeText(context, "Server connection failed", Toast.LENGTH_LONG).show();
+                                _loginButton.setEnabled(true);
+                                Toast.makeText(context, context.getString(R.string.server_connection_failed), Toast.LENGTH_LONG).show();
                             }
                         }) {
                             @Override
                             protected Map<String, String> getParams() {
                                 Map<String, String> params = new HashMap<>();
-                                params.put("email", DataManager.getMail());
-                                params.put("password", DataManager.getPassword());
+                                params.put("email", Credentials.loadUsername(context));
+                                params.put("password", Credentials.loadPassword(context));
                                 Log.d("Input ", params.toString());
                                 return params;
                             }
@@ -159,7 +154,6 @@ public class LoginActivity extends AppCompatActivity {
                                 return headers;
                             }
                         };
-
                         // Adding request to request queue
                         AppController.getInstance().addToRequestQueue(sr, tag_json_obj);
                     }
@@ -170,7 +164,6 @@ public class LoginActivity extends AppCompatActivity {
     public void login() {
         Log.d(TAG, "Login");
         if (!validate()) {
-            onLoginFailed();
             return;
         }
 
@@ -184,24 +177,19 @@ public class LoginActivity extends AppCompatActivity {
         }
         _loginButton.setEnabled(false);
 
+        final String server_ip = this.getString(R.string.server_ip);
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
 
-        DataManager.setMail(_emailText.getText().toString());
-        DataManager.setPassword(_passwordText.getText().toString());
-        final String server_ip = this.getString(R.string.server_ip);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage(this.getString(R.string.authenticating));
+        progressDialog.show();
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-
-
                         String tag_json_obj = "json_obj_req";
                         String url = server_ip + "login";
-
 
                         StringRequest sr = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                             @Override
@@ -212,15 +200,14 @@ public class LoginActivity extends AppCompatActivity {
                                     JSONObject login = new JSONObject(response);
                                     DataManager.setError(login.getBoolean("error"));
                                     DataManager.setName(login.getString("name"));
-                                    DataManager.setMail(login.getString("email"));
+                                    Credentials.saveUsername(context, login.getString("email"));
                                     DataManager.setApi_key(login.getString("apiKey"));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                Log.d("Error bolean", DataManager.getError().toString());
+                                Log.d("Error boolean", DataManager.getError().toString());
 
                                 if (!DataManager.getError()) {
-
                                     //Starting profile activity
                                     // Start the Signup activity
                                     onLoginSuccess();
@@ -239,14 +226,15 @@ public class LoginActivity extends AppCompatActivity {
                                 VolleyLog.d(TAG + "error 1", "Error: " + error.getMessage());
                                 Log.d(TAG + "error 2", "" + error.getMessage() + "," + error.toString());
                                 progressDialog.hide();
-                                Toast.makeText(context, "Server connection failed", Toast.LENGTH_LONG).show();
+                                _loginButton.setEnabled(true);
+                                Toast.makeText(context, context.getString(R.string.server_connection_failed), Toast.LENGTH_LONG).show();
                             }
                         }) {
                             @Override
                             protected Map<String, String> getParams() {
                                 Map<String, String> params = new HashMap<>();
-                                params.put("email", DataManager.getMail());
-                                params.put("password", DataManager.getPassword());
+                                params.put("email", Credentials.loadUsername(context));
+                                params.put("password", Credentials.loadPassword(context));
                                 Log.d("Input ", params.toString());
                                 return params;
                             }
@@ -258,16 +246,12 @@ public class LoginActivity extends AppCompatActivity {
                                 return headers;
                             }
                         };
-
                     // Adding request to request queue
                         AppController.getInstance().addToRequestQueue(sr, tag_json_obj);
                     }
 
                 }, 3000);
-
-
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -285,45 +269,37 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginSuccess() {
-        _loginButton.setEnabled(true);
         Log.i(TAG, "Succesvol ingelogd");
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        Log.i(TAG, "Start intent mainactivity");
-        Toast.makeText(context, "Login succesfull", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, this.getString(R.string.login_succesfull), Toast.LENGTH_LONG).show();
         startActivity(intent);
         finish();
     }
 
     public void onLoginFailed() {
-        Log.i(TAG, "Fout bij inloggen");
-        Toast.makeText(context, "Wrong Email or Password", Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
+        Log.i(TAG, "Fout bij inloggen");
+        Toast.makeText(context, this.getString(R.string.login_failed_pw), Toast.LENGTH_LONG).show();
     }
 
     public boolean validate() {
         boolean valid = true;
-
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a valid email address");
+            _emailText.setError(this.getString(R.string.validate_mail));
             valid = false;
         } else {
             _emailText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() || password.length() < 4 || password.length() > 40) {
+            _passwordText.setError(this.getString(R.string.validate_password));
             valid = false;
         } else {
             _passwordText.setError(null);
         }
-
         return valid;
     }
-
-
-
-
 }

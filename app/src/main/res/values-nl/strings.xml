@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Jotihunt Didam</string>
+    <string name="authenticating">Authenticeren...</string>
+    <string name="creating_account">Account aanmaken...</string>
+    <string name="drawer_close">Sluit navigatiebalk</string>
+    <string name="drawer_open">Open navigatiebalk</string>
+    <string name="login_failed">Inloggen mislukt</string>
+    <string name="login_failed_pw">Verkeerd mail adres of wachtwoord</string>
+    <string name="login_succesfull">Succesvol ingelogd</string>
+    <string name="server_connection_failed">Server connectie mislukt</string>
+    <string name="validate_mail">Voer een geldig mail adres in</string>
+    <string name="validate_name">Minimaal 3 tekens</string>
+    <string name="validate_password">Tussen de 4 en 40 tekens</string>
+    <string name="already_account">Al een account? Log in</string>
+    <string name="login">Log in</string>
+    <string name="invite_code">Uitnodigingscode</string>
+    <string name="email">E-mail</string>
+    <string name="create_account">Maak Account</string>
+    <string name="logo_description">Login Logo</string>
+    <string name="name">Naam</string>
+    <string name="no_account">Nog geen account? Registreer hier</string>
+    <string name="password">Wachtwoord</string>
+    <string name="save_login">Onthoud gegevens</string>
+</resources>

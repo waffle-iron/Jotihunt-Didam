@@ -8,6 +8,29 @@
     <string name="POST">POST</string>
     <string name="STATE_ENDED">ended</string>
 
+    <!-- Login Activity -->
+    <string name="authenticating">Authenticating&#8230;</string>
+    <string name="server_connection_failed">Server connection failed</string>
+    <string name="login_succesfull">Login successful</string>
+    <string name="login_failed_pw">Wrong email or password</string>
+    <string name="validate_mail">Enter a valid email address</string>
+    <string name="validate_password">Between 4 and 40 characters</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="save_login">Save Login</string>
+    <string name="login">Login</string>
+    <string name="no_account">No account yet? Create one</string>
+    <string name="logo_description">Login Logo</string>
+
+    <!-- Sign-up Activity -->
+    <string name="creating_account">Creating account&#8230;</string>
+    <string name="login_failed">Login failed</string>
+    <string name="validate_name">At least 3 characters</string>
+    <string name="name">Name</string>
+    <string name="invite_code">Invite Code</string>
+    <string name="create_account">Create Account</string>
+    <string name="already_account">Already a member? Login</string>
+
     <!-- MISC -->
     <string name="pref_id">pref_id</string>
     <string name="pref_pass">pref_pass</string>
@@ -16,6 +39,6 @@
     <string name="pref_password">password</string>
     <string name="pref_remember">remember</string>
 
-    <string name="server_ip">http://192.168.0.15/api/v1/</string>
+    <string name="server_ip">http://192.168.1.9/api/v1/</string>
 
 </resources>
