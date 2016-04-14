@@ -1,14 +1,15 @@
 package com.julian.jotihuntdidam.Fragments;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,17 +26,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 
 
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.kml.KmlContainer;
 import com.google.maps.android.kml.KmlLayer;
-import com.google.maps.android.kml.KmlPlacemark;
-import com.google.maps.android.kml.KmlPolygon;
 import com.julian.jotihuntdidam.Logics.AppController;
 import com.julian.jotihuntdidam.Logics.DataManager;
 import com.julian.jotihuntdidam.Logics.LocationService;
@@ -50,32 +47,55 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CurrentLocationFragment extends Fragment {
+public class CurrentLocationFragment extends Fragment{
 
     private SupportMapFragment mSupportMapFragment;
-    JSONObject getallcoord;
-    JSONArray getalcoordarray;
-    GoogleMap googleMapp;
-    JSONArray jsonArray;
+    private GoogleMap map;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_current_location,
                 container, false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("Huidige Locatie");
-
-        if ( ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
-
-            requestPermissions( new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
-                    1);
-            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    2);
-
+        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                startFragment();
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+            // We've been denied once before. Explain why we need the permission, then ask again.
+            getActivity().showDialog(123);
+        } else {
+            // We've never asked. Just do it.
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
         }
+
+        return view;
+    }
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 123) {
+            for (int i = 0; i < permissions.length; i++) {
+                String permission = permissions[i];
+                int grantResult = grantResults[i];
+
+                if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                        startFragment();
+                    } else {
+                        ActivityCompat.requestPermissions(getActivity(),
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                123);
+                    }
+                }
+            }
+        }
+    }
+
+    private void startFragment() {
         getActivity().startService(new Intent(getContext(), LocationService.class));
         thread.start();
-
         mSupportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapwhere);
         if (mSupportMapFragment == null) {
             FragmentManager fragmentManager = getFragmentManager();
@@ -84,8 +104,6 @@ public class CurrentLocationFragment extends Fragment {
             fragmentTransaction.replace(R.id.mapwhere, mSupportMapFragment).commit();
         }
         startMap();
-
-        return view;
     }
 
 
@@ -93,7 +111,6 @@ public class CurrentLocationFragment extends Fragment {
         mSupportMapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                googleMapp = googleMap;
                 if (googleMap != null) {
                     googleMap.getUiSettings().setAllGesturesEnabled(true);
                     try {
@@ -102,9 +119,8 @@ public class CurrentLocationFragment extends Fragment {
                         kmlLayerarea.addLayerToMap();
                         kmlLayerpoint.addLayerToMap();
                         moveCamera(googleMap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (XmlPullParserException e) {
+                        map = googleMap;
+                    } catch (IOException | XmlPullParserException e) {
                         e.printStackTrace();
                     }
                 }
@@ -118,24 +134,8 @@ public class CurrentLocationFragment extends Fragment {
                 .zoom(9)                   // Sets the zoom
                 .build();                   // Creates a CameraPosition from the builder
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
     }
-    private void moveCameraToKml(KmlLayer kmlLayer) {
-        KmlContainer document = kmlLayer.getContainers().iterator().next();
-        //Retrieve a nested container within the first container
-        KmlContainer folder = document.getContainers().iterator().next();
-        //Retrieve the first placemark in the nested container
-        KmlPlacemark placemark = folder.getPlacemarks().iterator().next();
-        //Retrieve a polygon object in a placemark
-        KmlPolygon polygon = (KmlPolygon) placemark.getGeometry();
-        //Create LatLngBounds of the outer coordinates of the polygon
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (LatLng latLng : polygon.getOuterBoundaryCoordinates()) {
-            builder.include(latLng);
-        }
-        mSupportMapFragment.getMap().moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 1));
 
-    }
 
     Thread thread = new Thread() {
         @Override
@@ -154,15 +154,23 @@ public class CurrentLocationFragment extends Fragment {
                                 Log.d(TAG + "Good", response);
                                 try {
                                     //Do it with this it will work
-                                    getalcoordarray = new JSONArray(response);
-                                    getallcoord = new JSONObject(response);
-                                    setMarker();
-                                    Log.d(TAG, getallcoord.toString());
+                                    JSONObject coordsobject = new JSONObject(response);
+                                    JSONArray coordsarray = coordsobject.getJSONArray("coords");
+                                    Log.d("JSON MAP", coordsarray.toString());
+                                    int numberofitems = coordsarray.length();
+                                    for (int i = 0; i < numberofitems; i++) {
+                                        JSONObject result = coordsarray.getJSONObject(i);
+                                        MarkerOptions m = new MarkerOptions()
+                                                .title(result.getString("name"))
+                                                .position(new LatLng(result.getDouble("latitude"),result.getDouble("longitude")))
+                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_car));
+                                        map.addMarker(m);
+                                        Log.d("Google Map Marker", result.getString("name") + result.getDouble("latitude"));
+                                    }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                                 Log.d("Error bolean", DataManager.getError().toString());
-
                             }
                         }, new Response.ErrorListener() {
                             @Override
@@ -199,17 +207,5 @@ public class CurrentLocationFragment extends Fragment {
 
 
     };
-
-private void setMarker() {
-    Log.d("JSON MAP", getallcoord.toString());
-    for (int i = 0; i < getallcoord.length(); i++) {
-        MarkerOptions m = new MarkerOptions()
-                .title(getallcoord.optString("name"))
-                .position(new LatLng(getallcoord.optDouble("latitude"), getallcoord.optDouble("longitude")));
-        googleMapp.addMarker(m);
-
-    }
-}
-
 
 }

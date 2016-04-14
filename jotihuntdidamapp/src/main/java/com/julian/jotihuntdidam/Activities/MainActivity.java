@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity implements
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.flContent, new CurrentLocationFragment());
         tx.commit();
-    }
 
+    }
 
     private void initViews() {
         // Set a Toolbar to replace the ActionBar.
