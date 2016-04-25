@@ -3,7 +3,10 @@ package com.julian.jotihuntdidam.Fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -14,6 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -22,15 +27,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.common.api.BooleanResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.kml.KmlLayer;
 import com.julian.jotihuntdidam.Logics.AppController;
@@ -51,6 +59,9 @@ public class CurrentLocationFragment extends Fragment{
 
     private SupportMapFragment mSupportMapFragment;
     private GoogleMap map;
+    private Marker marker;
+    private HashMap<Integer, Marker> mHashMap = new HashMap<Integer, Marker>();
+    private HashMap<Marker, Integer> m2HashMap = new HashMap<Marker, Integer>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -141,13 +152,12 @@ public class CurrentLocationFragment extends Fragment{
         @Override
         public void run() {
             try {
-                while(true) {
-                    sleep(4000);
+                while(!thread.isInterrupted()) {
+                    sleep(5000);
                         final String server_ip = getContext().getString(R.string.server_ip);
                         String tag_json_obj = "json_obj_req";
                         String url = server_ip + "allcoords";
                         final String TAG = "GetCoord";
-
                         StringRequest sr = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -157,15 +167,28 @@ public class CurrentLocationFragment extends Fragment{
                                     JSONObject coordsobject = new JSONObject(response);
                                     JSONArray coordsarray = coordsobject.getJSONArray("coords");
                                     Log.d("JSON MAP", coordsarray.toString());
+
+
                                     int numberofitems = coordsarray.length();
                                     for (int i = 0; i < numberofitems; i++) {
                                         JSONObject result = coordsarray.getJSONObject(i);
+                                        int markerid = result.getInt("id");
                                         MarkerOptions m = new MarkerOptions()
                                                 .title(result.getString("name"))
-                                                .position(new LatLng(result.getDouble("latitude"),result.getDouble("longitude")))
-                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_car));
-                                        map.addMarker(m);
+                                                .snippet(result.getString("createdAt"))
+                                                .position(new LatLng(result.getDouble("latitude"), result.getDouble("longitude")));
+                                        if (!mHashMap.containsKey(markerid)) {
+                                            Marker marker = map.addMarker(m);
+                                            mHashMap.put(markerid, marker);
+                                            Log.i("marker", "isnt in hashmap");
+                                        } else {
+                                            Marker existingMarker = mHashMap.get(markerid);
+                                            animateMarker(existingMarker, new LatLng(result.getDouble("latitude"), result.getDouble("longitude")), false);
+                                            existingMarker.setSnippet(result.getString("createdAt"));
+                                            Log.i("marker", "is in hashmap");
+                                        }
                                         Log.d("Google Map Marker", result.getString("name") + result.getDouble("latitude"));
+                                        Log.d("Google Map Hashmap", mHashMap.toString());
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -207,5 +230,40 @@ public class CurrentLocationFragment extends Fragment{
 
 
     };
+
+    public void animateMarker(final Marker marker, final LatLng toPosition,
+                              final boolean hideMarker) {
+        final Handler handler = new Handler();
+        final long start = SystemClock.uptimeMillis();
+        Projection proj = map.getProjection();
+        Point startPoint = proj.toScreenLocation(marker.getPosition());
+        final LatLng startLatLng = proj.fromScreenLocation(startPoint);
+        final long duration = 1500;
+        final Interpolator interpolator = new LinearInterpolator();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                long elapsed = SystemClock.uptimeMillis() - start;
+                float t = interpolator.getInterpolation((float) elapsed
+                        / duration);
+                double lng = t * toPosition.longitude + (1 - t)
+                        * startLatLng.longitude;
+                double lat = t * toPosition.latitude + (1 - t)
+                        * startLatLng.latitude;
+                marker.setPosition(new LatLng(lat, lng));
+                if (t < 1.0) {
+                    // Post again 16ms later.
+                    handler.postDelayed(this, 16);
+                } else {
+                    if (hideMarker) {
+                        marker.setVisible(false);
+                    } else {
+                        marker.setVisible(true);
+                    }
+                }
+            }
+        });
+    }
+
 
 }
