@@ -3,15 +3,23 @@
     <PreferenceCategory
         android:title="GPS Instellingen">
             <EditTextPreference
-                android:key="gps_number"
+                android:key="gps_interval"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
-                android:inputType="phone"
+                android:inputType="number"
                 android:digits="1234567890"
-                android:title="GPS Telefoon Nummer"
-                android:summary="Vul hier het nummer in"
-                android:id="@+id/gps_number"/>
-
+                android:title="GPS Update Inteval"
+                android:summary="Vul hier het aantal seconden in"
+                android:id="@+id/gps_interval"/>
+        <EditTextPreference
+            android:key="animation_time"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:inputType="number"
+            android:digits="1234567890"
+            android:title="Marker Animatie Tijd"
+            android:summary="Vul hier het aantal seconden in"
+            android:id="@+id/animation_time"/>
             <CheckBoxPreference
                 android:key="save_history"
                 android:summary="Sla geschiedenis op"

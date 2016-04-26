@@ -120,8 +120,8 @@ public class LoginActivity extends AppCompatActivity {
 
                                 if (!DataManager.getError()) {
                                     //Login succesfull without error in mail or pw
+                                    progressDialog.dismiss();
                                     onLoginSuccess();
-                                    progressDialog.hide();
                                 } else {
                                     //Login failed with error in mail or pw
                                     onLoginFailed();
@@ -210,8 +210,8 @@ public class LoginActivity extends AppCompatActivity {
                                 if (!DataManager.getError()) {
                                     //Starting profile activity
                                     // Start the Signup activity
+                                    progressDialog.dismiss();
                                     onLoginSuccess();
-                                    progressDialog.hide();
                                 } else {
                                     //If the server response is not success
                                     //Displaying an error message on toast

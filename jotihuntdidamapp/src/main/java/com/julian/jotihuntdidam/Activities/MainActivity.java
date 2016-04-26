@@ -21,6 +21,7 @@ import com.julian.jotihuntdidam.Fragments.AboutFragment;
 import com.julian.jotihuntdidam.Fragments.CurrentLocationFragment;
 import com.julian.jotihuntdidam.Fragments.GPSFragment;
 import com.julian.jotihuntdidam.Fragments.HomeFragment;
+import com.julian.jotihuntdidam.Fragments.MyPreferenceFragment;
 import com.julian.jotihuntdidam.R;
 
 
@@ -165,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements
                     fragmentClass = HomeFragment.class;
                     break;
                 case R.id.nav_third_fragment:
-                    fragmentClass = GPSFragment.class;
+                    fragmentClass = MyPreferenceFragment.class;
                     break;
                 case R.id.nav_fourth_fragment:
                     fragmentClass = AboutFragment.class;
