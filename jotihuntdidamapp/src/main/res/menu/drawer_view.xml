@@ -1,27 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group>
+
         <item
             android:id="@+id/nav_first_fragment"
-            android:icon="@drawable/ic_home"
-            android:title="Home"
-            android:checkable="true"/>
-        <item
-            android:id="@+id/nav_second_fragment"
             android:icon="@drawable/ic_current_location"
             android:title="Huidige Locatie"
             android:checkable="true"/>
         <item
-            android:id="@+id/nav_third_fragment"
-            android:icon="@drawable/ic_location_history"
-            android:title="Locatie Geschiedenis"
-            android:subtitle="Laatst afgelegde locatie in een lijn"
-            android:checkable="true"/>
-        <item
-            android:id="@+id/nav_fourth_fragment"
-            android:icon="@drawable/ic_gps_information"
-            android:title="GPS Tracker Informatie"
-            android:subtitle="Informatie over de Tracker"
+            android:id="@+id/nav_second_fragment"
+            android:icon="@drawable/ic_home"
+            android:title="Home"
             android:checkable="true"/>
     </group>
 
@@ -29,12 +18,12 @@
         <menu>
             <item
                 android:title="GPS Instellingen"
-                android:id="@+id/nav_fifth_fragment"
+                android:id="@+id/nav_third_fragment"
                 android:checkable="true"
                 android:icon="@drawable/ic_settings"/>
             <item
                 android:title="Over de app"
-                android:id="@+id/nav_sixt_fragment"
+                android:id="@+id/nav_fourth_fragment"
                 android:checkable="true"
                 android:icon="@drawable/ic_info"/>
         </menu>

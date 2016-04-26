@@ -1,12 +1,15 @@
 package com.julian.jotihuntdidam.Fragments;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -61,7 +64,10 @@ public class CurrentLocationFragment extends Fragment{
     private GoogleMap map;
     private Marker marker;
     private HashMap<Integer, Marker> mHashMap = new HashMap<Integer, Marker>();
-    private HashMap<Marker, Integer> m2HashMap = new HashMap<Marker, Integer>();
+
+
+    int gpsupdate = 5000;
+    int animationupdate = 1500;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,13 +75,13 @@ public class CurrentLocationFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_current_location,
                 container, false);
         if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                startFragment();
-        } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+            startFragment();
+        } else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
             // We've been denied once before. Explain why we need the permission, then ask again.
             getActivity().showDialog(123);
         } else {
             // We've never asked. Just do it.
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
         }
 
         return view;
@@ -84,7 +90,7 @@ public class CurrentLocationFragment extends Fragment{
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 123) {
             for (int i = 0; i < permissions.length; i++) {
@@ -95,15 +101,13 @@ public class CurrentLocationFragment extends Fragment{
                     if (grantResult == PackageManager.PERMISSION_GRANTED) {
                         startFragment();
                     } else {
-                        ActivityCompat.requestPermissions(getActivity(),
-                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                 123);
                     }
                 }
             }
         }
     }
-
     private void startFragment() {
         getActivity().startService(new Intent(getContext(), LocationService.class));
         thread.start();
@@ -112,7 +116,7 @@ public class CurrentLocationFragment extends Fragment{
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             mSupportMapFragment = SupportMapFragment.newInstance();
-            fragmentTransaction.replace(R.id.mapwhere, mSupportMapFragment).commit();
+            fragmentTransaction.replace(R.id.mapwhere, mSupportMapFragment).commitAllowingStateLoss();
         }
         startMap();
     }
@@ -153,7 +157,7 @@ public class CurrentLocationFragment extends Fragment{
         public void run() {
             try {
                 while(!thread.isInterrupted()) {
-                    sleep(5000);
+                    sleep(gpsupdate);
                         final String server_ip = getContext().getString(R.string.server_ip);
                         String tag_json_obj = "json_obj_req";
                         String url = server_ip + "allcoords";
