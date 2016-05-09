@@ -31,6 +31,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.common.api.BooleanResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -43,6 +45,10 @@ import com.google.android.gms.maps.model.LatLng;
 
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
 import com.google.maps.android.kml.KmlLayer;
 import com.julian.jotihuntdidam.Logics.AppController;
 import com.julian.jotihuntdidam.Logics.DataManager;
@@ -269,5 +275,18 @@ public class CurrentLocationFragment extends Fragment{
         });
     }
 
+    private static final String STRING_KEY = "com.example.key.count";
+
+    private GoogleApiClient mGoogleApiClient;
+
+
+    // Create a data map and put data in it
+    private void sendApiKey() {
+        PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/apikey");
+        putDataMapReq.getDataMap().putString(STRING_KEY, DataManager.getApi_key());
+        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+        PendingResult<DataApi.DataItemResult> pendingResult =
+                Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+    }
 
 }

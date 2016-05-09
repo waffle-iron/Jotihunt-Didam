@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Jotihunt Didam</string>
     <string name="intro_text">Long click to exit the map.</string>
+
+    <string name="server_ip">http://jotihuntdidam.nl/api/v1/</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="hello_round">Hello Round World!</string>
+    <string name="hello_square">Hello Square World!</string>
 </resources>
