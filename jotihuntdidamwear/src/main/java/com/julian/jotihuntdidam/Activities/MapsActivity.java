@@ -56,7 +56,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
      */
     private GoogleMap mMap;
     private HashMap<Integer, Marker> mHashMap = new HashMap<Integer, Marker>();
-    int gpsupdate = 5000;
+    int gpsupdate = 20000;
 
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);

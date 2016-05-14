@@ -261,10 +261,10 @@ public class MainActivity extends AppCompatActivity implements
             for (Node node : nodes.getNodes()) {
                 MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(googleClient, node.getId(), path, message.getBytes()).await();
                 if (result.getStatus().isSuccess()) {
-                    Log.v("WEAR Phone", "Message: {" + message + "} sent to: " + node.getDisplayName());
+                    Log.v("WEAR", "Message: {" + message + "} sent to: " + node.getDisplayName());
                 } else {
                     // Log an error
-                    Log.v("WEAR Phone", "ERROR: failed to send Message");
+                    Log.v("myTag", "ERROR: failed to send Message");
                 }
             }
         }

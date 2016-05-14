@@ -141,8 +141,8 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             protected Map<String, String> getParams() {
                                 Map<String, String> params = new HashMap<>();
-                                params.put("email", Credentials.loadUsername(context));
-                                params.put("password", Credentials.loadPassword(context));
+                                params.put("email", _emailText.getText().toString());
+                                params.put("password", _passwordText.getText().toString());
                                 Log.d("Input ", params.toString());
                                 return params;
                             }
@@ -206,7 +206,6 @@ public class LoginActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                                 Log.d("Error boolean", DataManager.getError().toString());
-
                                 if (!DataManager.getError()) {
                                     //Starting profile activity
                                     // Start the Signup activity
@@ -215,8 +214,8 @@ public class LoginActivity extends AppCompatActivity {
                                 } else {
                                     //If the server response is not success
                                     //Displaying an error message on toast
-                                    onLoginFailed();
                                     progressDialog.hide();
+                                    onLoginFailed();
                                 }
 
                             }
@@ -233,8 +232,8 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             protected Map<String, String> getParams() {
                                 Map<String, String> params = new HashMap<>();
-                                params.put("email", Credentials.loadUsername(context));
-                                params.put("password", Credentials.loadPassword(context));
+                                params.put("email", _emailText.getText().toString());
+                                params.put("password", _passwordText.getText().toString());
                                 Log.d("Input ", params.toString());
                                 return params;
                             }
