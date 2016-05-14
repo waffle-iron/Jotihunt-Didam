@@ -17,16 +17,25 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.Wearable;
 import com.julian.jotihuntdidam.Fragments.AboutFragment;
 import com.julian.jotihuntdidam.Fragments.CurrentLocationFragment;
 import com.julian.jotihuntdidam.Fragments.GPSFragment;
 import com.julian.jotihuntdidam.Fragments.HomeFragment;
 import com.julian.jotihuntdidam.Fragments.MyPreferenceFragment;
+import com.julian.jotihuntdidam.Logics.DataManager;
 import com.julian.jotihuntdidam.R;
 
 
 public class MainActivity extends AppCompatActivity implements
-        PreferenceFragmentCompat.OnPreferenceStartScreenCallback{
+        PreferenceFragmentCompat.OnPreferenceStartScreenCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private ActionBarDrawerToggle mDrawerToggle;
     private MenuItem prevMenuItem;
@@ -34,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements
 
     NavigationView nvDrawer;
     DrawerLayout mDrawerLayout;
+    GoogleApiClient googleClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +52,12 @@ public class MainActivity extends AppCompatActivity implements
         fragmentManager = getSupportFragmentManager();
         initViews();
         Log.d("Intent", "Start nieuwe service");
+        // Build a new GoogleApiClient for the Wearable API
+        googleClient = new GoogleApiClient.Builder(this)
+                .addApi(Wearable.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.flContent, new CurrentLocationFragment());
         tx.commit();
@@ -157,35 +173,35 @@ public class MainActivity extends AppCompatActivity implements
         Class fragmentClass;
 
         //Checking if the item is in checked state or not, if not make it in checked state
-            menuItem.setChecked(true);
-            switch (menuItem.getItemId()) {
-                case R.id.nav_first_fragment:
-                    fragmentClass = CurrentLocationFragment.class;
-                    break;
-                case R.id.nav_second_fragment:
-                    fragmentClass = HomeFragment.class;
-                    break;
-                case R.id.nav_third_fragment:
-                    fragmentClass = MyPreferenceFragment.class;
-                    break;
-                case R.id.nav_fourth_fragment:
-                    fragmentClass = AboutFragment.class;
-                    break;
-                default:
-                    fragmentClass = CurrentLocationFragment.class;
-            }
+        menuItem.setChecked(true);
+        switch (menuItem.getItemId()) {
+            case R.id.nav_first_fragment:
+                fragmentClass = CurrentLocationFragment.class;
+                break;
+            case R.id.nav_second_fragment:
+                fragmentClass = HomeFragment.class;
+                break;
+            case R.id.nav_third_fragment:
+                fragmentClass = MyPreferenceFragment.class;
+                break;
+            case R.id.nav_fourth_fragment:
+                fragmentClass = AboutFragment.class;
+                break;
+            default:
+                fragmentClass = CurrentLocationFragment.class;
+        }
 
-            try {
-                fragment = (Fragment) fragmentClass.newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-            // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
 
-            // Highlight the selected item, update the title, and close the drawer
+        // Highlight the selected item, update the title, and close the drawer
         if (prevMenuItem != null) {
             prevMenuItem.setChecked(false);
         }
@@ -193,6 +209,64 @@ public class MainActivity extends AppCompatActivity implements
         menuItem.setChecked(true);
         mDrawerLayout.closeDrawers();
         prevMenuItem = menuItem;
-            mDrawerLayout.closeDrawers();
+        mDrawerLayout.closeDrawers();
+    }
+
+    // Connect to the data layer when the Activity starts
+    @Override
+    protected void onStart() {
+        super.onStart();
+        googleClient.connect();
+    }
+
+    // Send a message when the data layer connection is successful.
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        String message = DataManager.getApi_key();
+        //Requires a new thread to avoid blocking the UI
+        new SendToDataLayerThread("/message_path", message).start();
+    }
+
+    // Disconnect from the data layer when the Activity stops
+    @Override
+    protected void onStop() {
+        if (null != googleClient && googleClient.isConnected()) {
+            googleClient.disconnect();
+        }
+        super.onStop();
+    }
+
+    // Placeholders for required connection callbacks
+    @Override
+    public void onConnectionSuspended(int cause) {
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+    }
+
+
+    class SendToDataLayerThread extends Thread {
+        String path;
+        String message;
+
+        // Constructor to send a message to the data layer
+        SendToDataLayerThread(String p, String msg) {
+            path = p;
+            message = msg;
+        }
+
+        public void run() {
+            NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(googleClient).await();
+            for (Node node : nodes.getNodes()) {
+                MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(googleClient, node.getId(), path, message.getBytes()).await();
+                if (result.getStatus().isSuccess()) {
+                    Log.v("WEAR", "Message: {" + message + "} sent to: " + node.getDisplayName());
+                } else {
+                    // Log an error
+                    Log.v("myTag", "ERROR: failed to send Message");
+                }
+            }
         }
     }
+}

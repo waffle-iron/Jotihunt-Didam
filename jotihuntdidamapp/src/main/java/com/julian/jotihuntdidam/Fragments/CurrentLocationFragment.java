@@ -1,17 +1,16 @@
 package com.julian.jotihuntdidam.Fragments;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -30,19 +29,23 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.google.android.gms.common.api.BooleanResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
 import com.google.maps.android.kml.KmlLayer;
 import com.julian.jotihuntdidam.Logics.AppController;
 import com.julian.jotihuntdidam.Logics.DataManager;
@@ -62,8 +65,8 @@ public class CurrentLocationFragment extends Fragment{
 
     private SupportMapFragment mSupportMapFragment;
     private GoogleMap map;
-    private Marker marker;
     private HashMap<Integer, Marker> mHashMap = new HashMap<Integer, Marker>();
+    private boolean gps;
 
 
     int gpsupdate = 5000;
@@ -108,9 +111,26 @@ public class CurrentLocationFragment extends Fragment{
             }
         }
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (this.mSupportMapFragment != null
+                && getFragmentManager().findFragmentById(
+                this.mSupportMapFragment.getId()) != null) {
+
+            getFragmentManager().beginTransaction().remove(this.mSupportMapFragment)
+                    .commit();
+            this.mSupportMapFragment = null;
+        }
+    }
+
     private void startFragment() {
         getActivity().startService(new Intent(getContext(), LocationService.class));
-        thread.start();
+        if (!gps) {
+            thread.start();
+        }
         mSupportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapwhere);
         if (mSupportMapFragment == null) {
             FragmentManager fragmentManager = getFragmentManager();
@@ -150,6 +170,35 @@ public class CurrentLocationFragment extends Fragment{
                 .build();                   // Creates a CameraPosition from the builder
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
+    int id = 01;
+
+
+    public void showNotification() {
+        Notification.Builder mBuilder =
+                new Notification.Builder(getContext())
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("Jotihunt Didam")
+                        .setContentText("Coördinaten worden verstuurd")
+                        .setOngoing(true);
+        Intent resultIntent = new Intent(getActivity(), CurrentLocationFragment.class);
+// Because clicking the notification opens a new ("special") activity, there's
+// no need to create an artificial back stack.
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        getContext(),
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+// Sets an ID for the notification
+        int mNotificationId = 001;
+// Gets an instance of the NotificationManager service
+        NotificationManager mNotifyMgr =
+                (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+// Builds the notification and issues it.
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+    }
 
 
     Thread thread = new Thread() {
@@ -158,6 +207,7 @@ public class CurrentLocationFragment extends Fragment{
             try {
                 while(!thread.isInterrupted()) {
                     sleep(gpsupdate);
+                        showNotification();
                         final String server_ip = getContext().getString(R.string.server_ip);
                         String tag_json_obj = "json_obj_req";
                         String url = server_ip + "allcoords";
@@ -269,5 +319,18 @@ public class CurrentLocationFragment extends Fragment{
         });
     }
 
+    private static final String STRING_KEY = "com.example.key.count";
+
+    private GoogleApiClient mGoogleApiClient;
+
+
+    // Create a data map and put data in it
+    private void sendApiKey() {
+        PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/apikey");
+        putDataMapReq.getDataMap().putString(STRING_KEY, DataManager.getApi_key());
+        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+        PendingResult<DataApi.DataItemResult> pendingResult =
+                Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+    }
 
 }
