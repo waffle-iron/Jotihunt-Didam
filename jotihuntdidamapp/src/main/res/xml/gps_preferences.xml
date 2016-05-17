@@ -2,15 +2,25 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:title="GPS Instellingen">
-            <EditTextPreference
-                android:key="gps_interval"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:inputType="number"
-                android:digits="1234567890"
-                android:title="GPS Update Inteval"
-                android:summary="Vul hier het aantal seconden in"
-                android:id="@+id/gps_interval"/>
+        <CheckBoxPreference
+            android:key="enable_gps"
+            android:summary="Vertstuur locatie naar server"
+            android:title="Verstuur locatie"
+            android:defaultValue="false"/>
+        <EditTextPreference
+            android:key="gps_interval"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:dependency="enable_gps"
+            android:inputType="number"
+            android:digits="1234567890"
+            android:title="GPS Update tijd"
+            android:summary="Vul hier het aantal seconden in"
+            android:id="@+id/gps_interval"/>
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Google Maps Instellingen">
         <EditTextPreference
             android:key="animation_time"
             android:selectAllOnFocus="true"
@@ -20,10 +30,10 @@
             android:title="Marker Animatie Tijd"
             android:summary="Vul hier het aantal seconden in"
             android:id="@+id/animation_time"/>
-            <CheckBoxPreference
-                android:key="save_history"
-                android:summary="Sla geschiedenis op"
-                android:title="Geschiedenis Opslaan"
-                android:defaultValue="false"/>
+        <CheckBoxPreference
+            android:key="enable_gps_receive"
+            android:summary="Ontvang locatie van andere"
+            android:title="Ontvang locatie"
+            android:defaultValue="true"/>
     </PreferenceCategory>
 </PreferenceScreen>

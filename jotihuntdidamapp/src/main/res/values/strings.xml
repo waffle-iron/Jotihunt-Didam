@@ -2,12 +2,12 @@
     <string name="app_name">Jotihunt Didam</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="title_activity_maps">Map</string>
-    <string name="server_ip">http://jotihuntdidam.nl/api/v1/</string>
+    <string name="title_activity_maps" translatable="false">Map</string>
+    <string name="server_ip" translatable="false">http://jotihuntdidam.nl/api/v1/</string>
 
-    <string name="GET">GET</string>
-    <string name="POST">POST</string>
-    <string name="STATE_ENDED">ended</string>
+    <string name="GET" translatable="false">GET</string>
+    <string name="POST" translatable="false">POST</string>
+    <string name="STATE_ENDED" translatable="false">ended</string>
 
     <!-- Login Activity -->
     <string name="authenticating">Authenticating&#8230;</string>
@@ -33,12 +33,12 @@
     <string name="already_account">Already a member? Login</string>
 
     <!-- MISC -->
-    <string name="pref_id">pref_id</string>
-    <string name="pref_pass">pref_pass</string>
-    <string name="title_activity_feedback">FeedbackActivity</string>
-    <string name="pref_username">username</string>
-    <string name="pref_password">password</string>
-    <string name="pref_remember">remember</string>
+    <string name="pref_id" translatable="false">pref_id</string>
+    <string name="pref_pass" translatable="false">pref_pass</string>
+    <string name="title_activity_feedback" translatable="false">FeedbackActivity</string>
+    <string name="pref_username" translatable="false">username</string>
+    <string name="pref_password" translatable="false">password</string>
+    <string name="pref_remember" translatable="false">remember</string>
 
 
 

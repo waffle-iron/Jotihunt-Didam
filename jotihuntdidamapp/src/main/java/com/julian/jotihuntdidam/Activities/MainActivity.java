@@ -27,7 +27,6 @@ import com.julian.jotihuntdidam.Fragments.AboutFragment;
 import com.julian.jotihuntdidam.Fragments.CurrentLocationFragment;
 import com.julian.jotihuntdidam.Fragments.GPSFragment;
 import com.julian.jotihuntdidam.Fragments.HomeFragment;
-import com.julian.jotihuntdidam.Fragments.MyPreferenceFragment;
 import com.julian.jotihuntdidam.Logics.DataManager;
 import com.julian.jotihuntdidam.R;
 
@@ -182,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements
                 fragmentClass = HomeFragment.class;
                 break;
             case R.id.nav_third_fragment:
-                fragmentClass = MyPreferenceFragment.class;
+                fragmentClass = GPSFragment.class;
                 break;
             case R.id.nav_fourth_fragment:
                 fragmentClass = AboutFragment.class;
@@ -244,6 +243,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
     }
+
+
 
 
     class SendToDataLayerThread extends Thread {

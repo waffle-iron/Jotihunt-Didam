@@ -56,7 +56,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
      */
     private GoogleMap mMap;
     private HashMap<Integer, Marker> mHashMap = new HashMap<Integer, Marker>();
-    int gpsupdate = 20000;
+    int gpsupdate = 8000;
 
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
@@ -117,6 +117,9 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
                 .zoom(9)                   // Sets the zoom
                 .build();                   // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        // start thread
+        thread.start();
     }
 
     @Override

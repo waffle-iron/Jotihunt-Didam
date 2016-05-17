@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +68,10 @@ public class CurrentLocationFragment extends Fragment{
     private SupportMapFragment mSupportMapFragment;
     private GoogleMap map;
     private HashMap<Integer, Marker> mHashMap = new HashMap<Integer, Marker>();
-    private boolean gps;
+    private boolean receiveLocation;
+    private boolean sendLocation;
+    private Context context;
+    Intent sendlocationservice;
 
 
     int gpsupdate = 5000;
@@ -112,25 +117,22 @@ public class CurrentLocationFragment extends Fragment{
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        if (this.mSupportMapFragment != null
-                && getFragmentManager().findFragmentById(
-                this.mSupportMapFragment.getId()) != null) {
-
-            getFragmentManager().beginTransaction().remove(this.mSupportMapFragment)
-                    .commit();
-            this.mSupportMapFragment = null;
-        }
-    }
-
     private void startFragment() {
-        getActivity().startService(new Intent(getContext(), LocationService.class));
-        if (!gps) {
-            thread.start();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        receiveLocation = sharedPref.getBoolean("enable_gps_receive", true);
+        sendLocation = sharedPref.getBoolean("enable_gps", false);
+        Log.d("test", "test");
+        if (sendLocation) {
+            Intent sendlocationservice = new Intent(getContext(), LocationService.class);
+            getActivity().startService(sendlocationservice);
+            Log.d("Location_service", "GPS is Sending");
+        } else {
+            if (sendlocationservice != null)
+            {
+                getActivity().stopService(sendlocationservice);
+            }
         }
+            thread.start();
         mSupportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapwhere);
         if (mSupportMapFragment == null) {
             FragmentManager fragmentManager = getFragmentManager();
@@ -149,6 +151,7 @@ public class CurrentLocationFragment extends Fragment{
                 if (googleMap != null) {
                     googleMap.getUiSettings().setAllGesturesEnabled(true);
                     try {
+                        context = getActivity();
                         KmlLayer kmlLayerarea = new KmlLayer(googleMap, R.raw.jotihunt2015_deelgebieden, getContext());
                         KmlLayer kmlLayerpoint = new KmlLayer(googleMap, R.raw.jotihunt2015_edit, getContext());
                         kmlLayerarea.addLayerToMap();
@@ -201,14 +204,15 @@ public class CurrentLocationFragment extends Fragment{
     }
 
 
+
+
     Thread thread = new Thread() {
         @Override
         public void run() {
             try {
-                while(!thread.isInterrupted()) {
-                    sleep(gpsupdate);
-                        showNotification();
-                        final String server_ip = getContext().getString(R.string.server_ip);
+                    while (receiveLocation) {
+                        sleep(gpsupdate);
+                        final String server_ip = context.getString(R.string.server_ip);
                         String tag_json_obj = "json_obj_req";
                         String url = server_ip + "allcoords";
                         final String TAG = "GetCoord";
@@ -234,12 +238,10 @@ public class CurrentLocationFragment extends Fragment{
                                         if (!mHashMap.containsKey(markerid)) {
                                             Marker marker = map.addMarker(m);
                                             mHashMap.put(markerid, marker);
-                                            Log.i("marker", "isnt in hashmap");
                                         } else {
                                             Marker existingMarker = mHashMap.get(markerid);
                                             animateMarker(existingMarker, new LatLng(result.getDouble("latitude"), result.getDouble("longitude")), false);
                                             existingMarker.setSnippet(result.getString("createdAt"));
-                                            Log.i("marker", "is in hashmap");
                                         }
                                         Log.d("Google Map Marker", result.getString("name") + result.getDouble("latitude"));
                                         Log.d("Google Map Hashmap", mHashMap.toString());
@@ -275,14 +277,11 @@ public class CurrentLocationFragment extends Fragment{
 
                         // Adding request to request queue
                         AppController.getInstance().addToRequestQueue(sr, tag_json_obj);
-
                     }
-                            } catch (InterruptedException e) {
-                e.printStackTrace();
+                }catch(InterruptedException e){
+                    e.printStackTrace();
+                }
             }
-        }
-
-
     };
 
     public void animateMarker(final Marker marker, final LatLng toPosition,
