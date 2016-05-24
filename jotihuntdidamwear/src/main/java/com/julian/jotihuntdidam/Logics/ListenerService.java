@@ -21,6 +21,7 @@ public class ListenerService extends WearableListenerService {
             Intent i = new Intent(this, MapsActivity.class);
             i.putExtra("apikey", message);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
         } else {
             super.onMessageReceived(messageEvent);

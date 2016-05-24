@@ -38,6 +38,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -235,6 +236,7 @@ public class CurrentLocationFragment extends Fragment{
                                                 .title(result.getString("name"))
                                                 .snippet(result.getString("createdAt"))
                                                 .position(new LatLng(result.getDouble("latitude"), result.getDouble("longitude")));
+                                        m.icon(BitmapDescriptorFactory.fromResource(R.drawable.carmarker));
                                         if (!mHashMap.containsKey(markerid)) {
                                             Marker marker = map.addMarker(m);
                                             mHashMap.put(markerid, marker);

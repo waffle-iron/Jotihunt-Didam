@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.julian.jotihuntdidam">
+    package="com.julian.jotihuntdidam" >
 
     <!-- Add permissions here -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
     <!-- Creating Permission to receive Google Maps -->
     <permission
         android:name="com.arshad.map.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
     <!-- Permission to receive Google Maps -->
     <uses-permission android:name="com.arshad.map.permission.MAPS_RECEIVE" />
+
     <!-- Application information -->
+
     <application
-        android:name="com.julian.jotihuntdidam.Logics.AppController"
+        android:name=".Logics.AppController"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        >
 
         <!-- Meta data here -->
         <!-- Google Maps Fragment API Key Data -->
@@ -33,10 +34,10 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <!-- activitys from here -->
-        <activity android:name="com.julian.jotihuntdidam.Activities.MainActivity"></activity>
+        <activity android:name=".Activities.MainActivity" />
         <activity
-            android:name="com.julian.jotihuntdidam.Activities.SplashActivity"
-            android:theme="@style/SplashTheme">
+            android:name=".Activities.SplashActivity"
+            android:theme="@style/SplashTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,14 +45,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.julian.jotihuntdidam.Activities.LoginActivity"
+            android:name=".Activities.LoginActivity"
             android:theme="@style/AppTheme.Dark" />
         <activity
-            android:name="com.julian.jotihuntdidam.Activities.SignupActivity"
+            android:name=".Activities.SignupActivity"
             android:theme="@style/AppTheme.Dark" />
 
         <service
-            android:name="com.julian.jotihuntdidam.Logics.LocationService"
+            android:name=".Logics.LocationService"
             android:enabled="true" />
     </application>
 
