@@ -1,7 +1,5 @@
 package com.julian.jotihuntdidam.Logics;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +9,6 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.ContactsContract;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -25,8 +21,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.julian.jotihuntdidam.Activities.MainActivity;
-import com.julian.jotihuntdidam.Fragments.CurrentLocationFragment;
 import com.julian.jotihuntdidam.R;
 
 import org.json.JSONException;

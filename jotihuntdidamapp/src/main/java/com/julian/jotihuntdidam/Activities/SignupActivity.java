@@ -17,7 +17,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.google.android.gms.auth.api.credentials.Credential;
 import com.julian.jotihuntdidam.Logics.AppController;
 import com.julian.jotihuntdidam.Logics.Credentials;
 import com.julian.jotihuntdidam.Logics.DataManager;

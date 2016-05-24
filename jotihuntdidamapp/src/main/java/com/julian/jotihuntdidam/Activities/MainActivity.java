@@ -1,6 +1,7 @@
 package com.julian.jotihuntdidam.Activities;
 
 import android.content.res.Configuration;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -77,9 +78,13 @@ public class MainActivity extends AppCompatActivity implements
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         // Set Toolbar
-
-        toolbar.setLogo(R.mipmap.ic_launcher);
+        if (toolbar != null) {
+            toolbar.setLogo(R.mipmap.ic_launcher);
+        }
         setSupportActionBar(toolbar); // Setting toolbar as the ActionBar with setSupportActionBar()
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setLogo(R.mipmap.ic_launcher);
+        }
 
         // Set the drawer toggle as the DrawerListener
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         };
         mDrawerToggle.syncState();
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -241,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
 

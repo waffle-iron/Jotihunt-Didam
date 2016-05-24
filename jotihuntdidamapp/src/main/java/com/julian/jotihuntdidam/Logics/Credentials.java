@@ -20,7 +20,7 @@ public class Credentials {
     }
 
     public static void clearUsername(Context ctx) {
-        PreferenceManager.getDefaultSharedPreferences(ctx).edit().remove(ctx.getString(R.string.pref_username));
+        PreferenceManager.getDefaultSharedPreferences(ctx).edit().remove(ctx.getString(R.string.pref_username)).commit();
     }
 
     public static void savePassword(Context ctx, String username) {
@@ -32,7 +32,7 @@ public class Credentials {
     }
 
     public static void clearPassword(Context ctx) {
-        PreferenceManager.getDefaultSharedPreferences(ctx).edit().remove(ctx.getString(R.string.pref_password));
+        PreferenceManager.getDefaultSharedPreferences(ctx).edit().remove(ctx.getString(R.string.pref_password)).commit();
     }
 
     public static void saveRememberPreference(Context ctx, boolean pref) {

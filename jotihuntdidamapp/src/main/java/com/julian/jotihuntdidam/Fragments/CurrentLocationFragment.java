@@ -12,6 +12,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -42,7 +43,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
-
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.wearable.DataApi;
@@ -70,7 +70,6 @@ public class CurrentLocationFragment extends Fragment{
     private GoogleMap map;
     private HashMap<Integer, Marker> mHashMap = new HashMap<Integer, Marker>();
     private boolean receiveLocation;
-    private boolean sendLocation;
     private Context context;
     Intent sendlocationservice;
 
@@ -99,7 +98,7 @@ public class CurrentLocationFragment extends Fragment{
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 123) {
             for (int i = 0; i < permissions.length; i++) {
@@ -121,7 +120,7 @@ public class CurrentLocationFragment extends Fragment{
     private void startFragment() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         receiveLocation = sharedPref.getBoolean("enable_gps_receive", true);
-        sendLocation = sharedPref.getBoolean("enable_gps", false);
+        boolean sendLocation = sharedPref.getBoolean("enable_gps", false);
         Log.d("test", "test");
         if (sendLocation) {
             Intent sendlocationservice = new Intent(getContext(), LocationService.class);
