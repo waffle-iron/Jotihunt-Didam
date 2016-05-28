@@ -2,8 +2,7 @@
     <string name="app_name">Jotihunt Didam</string>
     <string name="intro_text">Long click to exit the map.</string>
 
-    <string name="server_ip">http://jotihuntdidam.nl/api/v1/</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="hello_round">Hello Round World!</string>
-    <string name="hello_square">Hello Square World!</string>
+    <string name="server_ip" translatable="false">http://jotihuntdidam.nl/api/v1/</string>
+    <string name="title_activity_main" translatable="false">MainActivity</string>
+    <string name="login">Login via de telefoon</string>
 </resources>

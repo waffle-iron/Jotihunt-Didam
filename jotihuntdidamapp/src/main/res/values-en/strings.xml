@@ -22,4 +22,8 @@
     <string name="no_account">No account yet? Create one</string>
     <string name="password">Password</string>
     <string name="save_login">Remember me</string>
+    <string name="aboutfragment">About the app</string>
+    <string name="currentlocationfragment">Current Location</string>
+    <string name="gpsfragment">Settings</string>
+    <string name="homefragment">Explanation</string>
 </resources>

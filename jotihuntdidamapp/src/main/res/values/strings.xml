@@ -40,6 +40,12 @@
     <string name="pref_password" translatable="false">password</string>
     <string name="pref_remember" translatable="false">remember</string>
 
+    <!-- Fragments -->
+    <string name="currentlocationfragment">Huidige locatie</string>
+    <string name="aboutfragment">Over de app</string>
+    <string name="gpsfragment">Instellingen</string>
+    <string name="homefragment">Uitleg</string>
+
 
 
 </resources>

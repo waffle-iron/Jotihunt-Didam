@@ -22,4 +22,8 @@
     <string name="no_account">Nog geen account? Registreer hier</string>
     <string name="password">Wachtwoord</string>
     <string name="save_login">Onthoud gegevens</string>
+    <string name="aboutfragment">Over de app</string>
+    <string name="currentlocationfragment">Huidige Locatie</string>
+    <string name="gpsfragment">Instellingen</string>
+    <string name="homefragment">Uitleg</string>
 </resources>

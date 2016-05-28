@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Jotihunt Didam</string>
+    <string name="intro_text">Ingedrukt houden om af te sluiten.</string>
+    <string name="login">Login via de telefoon</string>
+</resources>
