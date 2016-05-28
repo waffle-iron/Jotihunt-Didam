@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageApi;
@@ -28,6 +29,7 @@ import com.julian.jotihuntdidam.Fragments.AboutFragment;
 import com.julian.jotihuntdidam.Fragments.CurrentLocationFragment;
 import com.julian.jotihuntdidam.Fragments.GPSFragment;
 import com.julian.jotihuntdidam.Fragments.HomeFragment;
+import com.julian.jotihuntdidam.Logics.AnalyticsApplication;
 import com.julian.jotihuntdidam.Logics.DataManager;
 import com.julian.jotihuntdidam.R;
 
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements
     private MenuItem prevMenuItem;
     public static FragmentManager fragmentManager;
 
+
     NavigationView nvDrawer;
     DrawerLayout mDrawerLayout;
     GoogleApiClient googleClient;
@@ -52,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements
         fragmentManager = getSupportFragmentManager();
         initViews();
         Log.d("Intent", "Start nieuwe service");
+        // Obtain the shared Tracker instance.
+
         // Build a new GoogleApiClient for the Wearable API
         googleClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
