@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'jotihuntdidamkey'
             keyPassword 'Datisleuk1'
-            storeFile file('E:/Google Drive/Documenten/Android Key/key.jks')
+            storeFile file('key.jks')
             storePassword 'Datisleuk1'
         }
     }
