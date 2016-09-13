@@ -131,6 +131,7 @@ public class CurrentLocationFragment extends Fragment{
 
         AppController application = (AppController) getActivity().getApplication();
         mTracker = application.getDefaultTracker();
+
     }
 
     @Override
@@ -143,53 +144,7 @@ public class CurrentLocationFragment extends Fragment{
         }
     }
 
-    private void firstTime() {
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        boolean firsttime = sharedPref.getBoolean("firsttime", true);
-        if (firsttime) {
-            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            startThread();
-                            sharedPref.edit().putBoolean("firsttime", false).apply();
-                            break;
-
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            sharedPref.edit().putBoolean("firsttime", false).apply();
-                            break;
-                    }
-                }
-            };
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("Wil je de gps inschakelen? (Kan later via instellingen veranderd worden)").setPositiveButton("Yes", dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
-        }
-    }
-
-    private void startThread() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        receiveLocation = sharedPref.getBoolean("enable_gps_receive", true);
-        boolean sendLocation = sharedPref.getBoolean("enable_gps", false);
-        if (sendLocation) {
-            Intent sendlocationservice = new Intent(getContext(), LocationService.class);
-            getActivity().startService(sendlocationservice);
-            Log.d("Location_service", "GPS is Sending");
-        } else {
-            if (sendlocationservice != null)
-            {
-                getActivity().stopService(sendlocationservice);
-            }
-        }
-        thread.start();
-    }
-
-
     private void startFragment() {
-
-
-
         mSupportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapwhere);
         if (mSupportMapFragment == null) {
             FragmentManager fragmentManager = getFragmentManager();
@@ -199,7 +154,6 @@ public class CurrentLocationFragment extends Fragment{
         }
         startMap();
     }
-
 
     public void startMap () {
         mSupportMapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -215,6 +169,7 @@ public class CurrentLocationFragment extends Fragment{
                         kmlLayerpoint.addLayerToMap();
                         moveCamera(googleMap);
                         map = googleMap;
+                        firstTime();
                     } catch (IOException | XmlPullParserException e) {
                         e.printStackTrace();
                     }
@@ -222,6 +177,61 @@ public class CurrentLocationFragment extends Fragment{
             }
         });
     }
+
+
+    private void firstTime() {
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if (sharedPref.getBoolean("firsttime", true)) {
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            startThread();
+                            sharedPref.edit().putBoolean("firsttime", false).apply();
+                            sharedPref.edit().putBoolean("enable_gps", true).apply();
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            sharedPref.edit().putBoolean("firsttime", false).apply();
+                            sharedPref.edit().putBoolean("enable_gps", false).apply();
+                            break;
+                    }
+                }
+            };
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMessage("Wil je de gps inschakelen? (Kan later via instellingen veranderd worden)").setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
+        }
+    }
+
+
+
+
+
+
+
+
+    private void startThread() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        receiveLocation = sharedPref.getBoolean("enable_gps_receive", true);
+        Boolean enable_gps = sharedPref.getBoolean("enable_gps", false);
+        Log.d("sharedPref", enable_gps.toString());
+        boolean sendLocation = sharedPref.getBoolean("enable_gps", false);
+        if (sendLocation) {
+            Intent sendlocationservice = new Intent(getContext(), LocationService.class);
+            getActivity().startService(sendlocationservice);
+            Log.d("Location_service", "GPS is Sending");
+        } else {
+            if (sendlocationservice != null)
+            {
+                getActivity().stopService(sendlocationservice);
+            }
+        }
+        thread.start();
+    }
+
+
 
     private void moveCamera(GoogleMap googleMap) {
         CameraPosition cameraPosition = new CameraPosition.Builder()
