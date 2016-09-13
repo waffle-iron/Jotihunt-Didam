@@ -9,7 +9,9 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -83,7 +85,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
        super.onViewCreated(view, savedInstanceState);
 
          // Set the default white background in the view so as to avoid transparency
-        view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.background_material_light));
+        view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
 
 
     }
@@ -106,7 +108,4 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
             mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         }
     }
-
-
-
 }

@@ -2,47 +2,63 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        config {
-            keyAlias 'jotihuntdidamkey'
-            keyPassword 'Datisleuk1'
-            storeFile file('key.jks')
-            storePassword 'Datisleuk1'
-        }
+        release
     }
-    compileSdkVersion 23
+    compileSdkVersion 24
     buildToolsVersion "23.0.3"
     defaultConfig {
         applicationId "com.julian.jotihunt"
         minSdkVersion 19
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 5
         versionName '0.1.1'
         // Enabling multidex support.
         multiDexEnabled true
-        signingConfig signingConfigs.config
+        signingConfig signingConfigs.release
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
+            signingConfig signingConfigs.release
         }
     }
     productFlavors {
     }
 }
 
+def Properties props = new Properties()
+def propFile = file('../signing.properties')
+if (propFile.canRead()){
+    props.load(new FileInputStream(propFile))
+
+    if (props!=null && props.containsKey('STORE_FILE') && props.containsKey('STORE_PASSWORD') &&
+            props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
+
+        android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
+        android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
+        android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
+        android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
+    } else {
+        android.buildTypes.release.signingConfig = null
+    }
+}else {
+    android.buildTypes.release.signingConfig = null
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:preference-v7:23.4.0'
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:preference-v7:24.2.1'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:design:24.2.1'
     compile 'com.jakewharton:butterknife:6.1.0'
-    compile 'com.google.android.gms:play-services:9.0.1'
+    compile 'com.google.android.gms:play-services:9.4.0'
     compile 'com.google.maps.android:android-maps-utils:0.4'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.google.android.gms:play-services-analytics:9.0.1'
+    compile 'com.google.android.gms:play-services-analytics:9.4.0'
     compile 'com.google.firebase:firebase-messaging:9.0.1'
     compile 'com.google.firebase:firebase-core:9.0.1'
     wearApp project(':jotihuntdidamwear')
