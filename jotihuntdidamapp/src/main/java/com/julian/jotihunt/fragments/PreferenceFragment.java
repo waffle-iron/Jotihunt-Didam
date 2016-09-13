@@ -16,7 +16,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.julian.jotihunt.R;
 import com.julian.jotihunt.logics.AppController;
 
-public class GPSFragment extends PreferenceFragmentCompat {
+public class PreferenceFragment extends PreferenceFragmentCompat {
 
     private Tracker mTracker;
 
@@ -35,6 +35,8 @@ public class GPSFragment extends PreferenceFragmentCompat {
             gpsInterval.setSummary(sharedPref.getString(
                     "gps_interval", "")
                     + 5000);
+            Log.d("GPS_Preference", (sharedPref.getString(
+                    "gps_interval", "")));
         }
         android.support.v7.preference.Preference animationTime = findPreference("animation_time");
         if (animationTime != null) {
@@ -53,7 +55,7 @@ public class GPSFragment extends PreferenceFragmentCompat {
                 Log.d("Setting", "User set always run to " + newValue.toString().equals("true"));
                 String enable_gps = newValue.toString();
                 Boolean boolean1 = Boolean.valueOf(enable_gps);
-                sharedPref.edit().putBoolean("enable_gps", boolean1).commit();
+                sharedPref.edit().putBoolean("enable_gps", boolean1).apply();
                 return true;
             }
         });
@@ -68,7 +70,7 @@ public class GPSFragment extends PreferenceFragmentCompat {
                 Log.d("Setting", "User set always run to " + newValue.toString().equals("true"));
                 String enable_gps_receive = newValue.toString();
                 Boolean boolean1 = Boolean.valueOf(enable_gps_receive);
-                sharedPref.edit().putBoolean("enable_gps_receive", boolean1).commit();
+                sharedPref.edit().putBoolean("enable_gps_receive", boolean1).apply();
                 return true;
             }
         });

@@ -26,7 +26,7 @@ import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.julian.jotihunt.fragments.AboutFragment;
 import com.julian.jotihunt.fragments.CurrentLocationFragment;
-import com.julian.jotihunt.fragments.GPSFragment;
+import com.julian.jotihunt.fragments.PreferenceFragment;
 import com.julian.jotihunt.fragments.HomeFragment;
 import com.julian.jotihunt.logics.DataManager;
 import com.julian.jotihunt.R;
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onPreferenceStartScreen(PreferenceFragmentCompat preferenceFragmentCompat,
                                            PreferenceScreen preferenceScreen) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        GPSFragment fragment = new GPSFragment();
+        PreferenceFragment fragment = new PreferenceFragment();
         Bundle args = new Bundle();
         args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, preferenceScreen.getKey());
         fragment.setArguments(args);
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements
                 fragmentClass = HomeFragment.class;
                 break;
             case R.id.nav_third_fragment:
-                fragmentClass = GPSFragment.class;
+                fragmentClass = PreferenceFragment.class;
                 break;
             case R.id.nav_fourth_fragment:
                 fragmentClass = AboutFragment.class;
