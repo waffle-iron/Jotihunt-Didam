@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/juliansteenbakker/Jotihunt-Didam.png?label=ready&title=Ready)](https://waffle.io/juliansteenbakker/Jotihunt-Didam)
 # Jotihunt APP Voor Scoutinggroep Didam #
 
 Ieder jaar wordt in Gelderland een spel gespeeld door vrijwel alle scoutinggroepen in Gelderland. Dit speel is de zogenaamde ```Jotihunt```
